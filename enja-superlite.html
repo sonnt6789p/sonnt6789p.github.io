@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My 2 Vue app</title>
+
+  <!--
+  <script src="https://unpkg.com/vue"></script>
+  -->
+  <script src="vue.js"></script>
+
+  <script>
+/**--------------- Global variables declarations ---------------*/
+window.GLOB = {
+  /**@type TypeEnJa[]*/
+  ENJA: null,
+  INDEX_CURRENT: 0,
+  // Configs:
+  AUDIO_PLAYBACK_RATE: 0.8,
+  /**Number of time that Japanese audio will be played before playing English audio.*/
+  REPLAY_JA_BEFORE: 2,
+  /**Number of time that Japanese audio will be played after playing English audio.*/
+  REPLAY_JA_AFTER: 1,
+  /**Number of time that English audio will be played.*/
+  REPLAY_EN: 1,
+  // Other:
+  SHOW_PLAY_BTN: true,
+  IS_PAUSING: false,
+  IS_INTENTIONAL_ERROR: false,
+};
+  </script>
+
+  <script>
+/**Initializations*/
+window.addEventListener('keydown', function(e) {
+  if(e.keyCode === 32 && e.target === document.body) {
+    e.preventDefault();
+    document.querySelector('audio').play();
+  }
+});
+window.onload = async () => {
+  await fetchEnJaJson();
+};
+  </script>
+
+  <script>
+async function doit() {
+  GLOB.SHOW_PLAY_BTN = false;
+  const hash = window.location.hash ? window.location.hash.substring(1) : null;
+  const parsedFloat = hash ? parseFloat(hash) : null;
+  const start = (parsedFloat == null || isNaN(parsedFloat)) ? 0 : parsedFloat;
+  GLOB.INDEX_CURRENT = start;
+  while (true) {
+    try {
+      const enJaItem = GLOB.ENJA[GLOB.INDEX_CURRENT];
+      // Prepare print JP.
+      let sb = 'ID: ' + GLOB.INDEX_CURRENT;
+      for (const line of enJaItem.japaneseSentences) {
+        if (sb) {
+          sb += '\n';
+        }
+        sb += line.rawText;
+      }
+      // Prepare print EN.
+      sb += '\n-------------------------------------';
+      for (const line of enJaItem.englishSentences) {
+        if (sb) {
+          sb += '\n';
+        }
+        sb += line.rawText;
+      }
+      // Print.
+      console.log(sb);
+      // Send text to server for remote-logging.
+      sendToServerTry(sb).then();
+      // Play audio
+      for (let i = 0; i < GLOB.REPLAY_JA_BEFORE; i++) {
+        if (i) {
+          await sleep(500);
+        }
+        await playAudioElmFromUrlToEnd(enJaItem.japaneseAudioFileName);
+      }
+      await sleep(500);
+      for (let i = 0; i < GLOB.REPLAY_EN; i++) {
+        if (i) {
+          await sleep(500);
+        }
+        await playAudioElmFromUrlToEnd(enJaItem.englishAudioFileName, 1.2);
+      }
+      await sleep(500);
+      for (let i = 0; i < GLOB.REPLAY_JA_AFTER; i++) {
+        if (i) {
+          await sleep(500);
+        }
+        await playAudioElmFromUrlToEnd(enJaItem.japaneseAudioFileName);
+      }
+      globIndexCurrentInc();
+    } catch (e) {
+      console.debug(e);
+      await sleep(500);
+      GLOB.IS_INTENTIONAL_ERROR = false;
+    }
+  }
+}
+async function fetchEnJaJson() {
+  try {
+    const res = await fetch('/enjasentences.json');
+    const jsonObj = await res.json();
+    console.debug(jsonObj);
+    GLOB.ENJA = jsonObj;
+  } catch (e) {
+    console.error(e);
+  }
+}
+function playAudioElmFromUrl(audioUrl, customSpeed) {
+  try {
+    const audioElm = document.querySelector('audio');
+    audioElm.src = audioUrl;
+    audioElm.playbackRate = customSpeed || GLOB.AUDIO_PLAYBACK_RATE;
+    return audioElm.play();
+  } catch (e) {
+    console.error(e);
+  }
+}
+function sleep(timeMs) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve('foo');
+    }, timeMs);
+  });
+}
+async function waitForAudioFinish() {
+  try {
+    const audio = document.querySelector('audio');
+    while (!audio.paused) {
+      console.debug('waiting for audio to finish...');
+      await sleep(500);
+    }
+    console.debug('audio finished!');
+  } catch (e) {
+    console.error(e);
+  }
+}
+async function playAudioElmFromUrlToEnd(audioUrl, customSpeed) {
+  await playAudioElmFromUrl(audioUrl, customSpeed);
+  await waitForPauseFlag();
+  await waitForAudioFinish();
+  throwIfWanted();
+}
+async function waitForPauseFlag() {
+  while (GLOB.IS_PAUSING) {
+    setAudioPlayingStatus(false);
+    await sleep(500);
+  }
+  setAudioPlayingStatus(true);
+}
+function setAudioPlayingStatus(isPlay) {
+  const audio = document.querySelector('audio');
+  if (audio) {
+    if (isPlay) {
+      audio.play();
+    } else {
+      audio.pause();
+    }
+  }
+}
+function restrictGlobIndexCurrentValue() {
+  if (GLOB.INDEX_CURRENT == null || isNaN(GLOB.INDEX_CURRENT)) {
+    GLOB.INDEX_CURRENT = 0;
+  }
+  if (GLOB.INDEX_CURRENT > GLOB.ENJA.length - 1) {
+    GLOB.INDEX_CURRENT = 0;
+  }
+  if (GLOB.INDEX_CURRENT < 0) {
+    if (GLOB.ENJA.length > 0) {
+      GLOB.INDEX_CURRENT = GLOB.ENJA.length - 1;
+    } else {
+      GLOB.INDEX_CURRENT = 0;
+    }
+  }
+}
+function globIndexCurrentInc() {
+  GLOB.INDEX_CURRENT++;
+  restrictGlobIndexCurrentValue();
+}
+function globIndexCurrentDec() {
+  GLOB.INDEX_CURRENT--;
+  restrictGlobIndexCurrentValue();
+}
+function throwIfWanted() {
+  if (GLOB.IS_INTENTIONAL_ERROR) {
+    throw new Error('Intentional Error :)');
+  }
+}
+function interuptCurrentLoop() {
+  GLOB.IS_INTENTIONAL_ERROR = true;
+}
+async function sendToServerTry(text) {
+  try {
+    const response = await fetch('http://localhost:8000/enja-server', {
+      method: 'POST', // *GET, POST, PUT, DELETE, etc.
+      mode: 'no-cors', // no-cors, *cors, same-origin
+      cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+      credentials: 'omit', // include, *same-origin, omit
+      headers: {
+        'Content-Type': 'text/html; charset=UTF-8'
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      redirect: 'follow', // manual, *follow, error
+      referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+      body: text // body data type must match "Content-Type" header
+    });
+    const responseValue = response.text();
+    console.debug('Server response: ' + responseValue);
+  } catch (e) {
+    console.debug('Server request error: ' + e);
+  }
+}
+window.cmd = {
+  get pause() {
+    GLOB.IS_PAUSING = true;
+  },
+  get unpause() {
+    GLOB.IS_PAUSING = false;
+  },
+  get next() {
+    interuptCurrentLoop();
+    globIndexCurrentInc();
+    return GLOB.INDEX_CURRENT + ' : ' + GLOB.ENJA[GLOB.INDEX_CURRENT].japaneseRawText;
+  },
+  get prev() {
+    interuptCurrentLoop();
+    globIndexCurrentDec();
+    return GLOB.INDEX_CURRENT + ' : ' + GLOB.ENJA[GLOB.INDEX_CURRENT].japaneseRawText;
+  },
+  goto(index, relative) {
+    interuptCurrentLoop();
+    if (relative) {
+    	GLOB.INDEX_CURRENT += (index || 0);
+    } else {
+    	GLOB.INDEX_CURRENT = index || 0;
+    }
+    restrictGlobIndexCurrentValue();
+    return GLOB.INDEX_CURRENT + ' : ' + GLOB.ENJA[GLOB.INDEX_CURRENT].japaneseRawText;
+  },
+  gotoLesson(lessonId) {
+    interuptCurrentLoop();
+    for (let i = 0; i < GLOB.ENJA.length; i++) {
+      const item = GLOB.ENJA[i];
+      const itemLessonId = item && item.lessonId && item.lessonId.replace('.0', '');
+      if (itemLessonId && itemLessonId === lessonId+'') {
+        GLOB.INDEX_CURRENT = i;
+        break;
+      }
+    }
+    restrictGlobIndexCurrentValue();
+    return GLOB.INDEX_CURRENT + ' : ' + GLOB.ENJA[GLOB.INDEX_CURRENT].japaneseRawText;
+  },
+  speed(value) {
+    if (value) {
+      GLOB.AUDIO_PLAYBACK_RATE = value;
+    }
+  },
+  get show() {
+    document.querySelector('#app').style.color = 'wheat';
+  },
+  textColor(color) {
+    if (color || color == null) {
+      // Show text in html.
+      document.querySelector('#app').style.color = (color === true || color == null) ? 'wheat' : color;
+    } else {
+      document.querySelector('#app').style.color = 'black';
+    }
+  },
+  text(status) {
+    this.textColor(status);
+  },
+  textSize(fontSize) {
+    document.querySelector('#app').style.fontSize = fontSize + 'px';
+  },
+  textPosition(top, left) {
+    if (top != null && left != null) {
+      document.querySelector('#app').style.position = 'absolute';
+      document.querySelector('#app').style.top = top + 'px';
+      document.querySelector('#app').style.left = left + 'px';
+    } else {
+      document.querySelector('#app').style.position = 'static';
+    }
+  },
+  get alertBookmark() {
+    const bm = localStorage.getItem('bookmark');
+    alert(bm);
+  }
+};
+window.CMD = window.cmd;
+  </script>
+
+  <script>
+const VUE_CONFIG = {
+  el: '#app',
+  watch: {
+  },
+  props: {
+  },
+  data: {
+    glob: GLOB,
+  },
+  methods: {
+  }
+}
+console.debug(GLOB);
+console.debug(VUE_CONFIG);
+  </script>
+
+  <script>
+function evaluateInputConsole() {
+  const inputConsole = document.querySelector('#elmId_inputConsole').value;
+  eval('cmd.' + inputConsole);
+}
+function bookmarkLocalStorage() {
+  let bookMarkStr = localStorage.getItem('bookmark');
+  if (!bookMarkStr) {
+    bookMarkStr = JSON.stringify([]);
+  }
+  const bookMarks = JSON.parse(bookMarkStr);
+  const newBookmarkItem = GLOB.INDEX_CURRENT + '\t' + GLOB.ENJA[GLOB.INDEX_CURRENT].japaneseRawText;
+  bookMarks.push(newBookmarkItem);
+  const prepareStr = JSON.stringify(bookMarks);
+  localStorage.setItem('bookmark', prepareStr);
+}
+  </script>
+
+</head>
+<body style="background-color: black; color: black;">
+  <div id="app" style="position: absolute; left: calc(50vw - 250px); top: calc(50vh - 50px); font-size: 30px;">
+    <div v-if="glob != null">
+      <div v-if="glob.SHOW_PLAY_BTN === true">
+        <button onclick="doit();">Play</button>
+      </div>
+      <div v-else>
+        <div>Index: {{glob.INDEX_CURRENT}} - Lesson: {{glob.ENJA[glob.INDEX_CURRENT].lessonId}}</div>
+        <div>
+          <div v-for="line of glob.ENJA[glob.INDEX_CURRENT].japaneseSentences"
+               class="hover-yellow">{{line.rawText}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <audio id="elmId_audio" src="" controls style="height: 100%; width: 100%;"></audio>
+  </div>
+  <div>
+    <textarea id="elmId_inputConsole"></textarea>
+    <button onclick="evaluateInputConsole();">Evaluate</button>
+  </div>
+  <div>
+    <button onclick="bookmarkLocalStorage();" style="width: 100px; height: 100px;">Bookmark</button>
+  </div>
+
+  <script>
+    try {
+      const app = new Vue(VUE_CONFIG);
+    } catch (e) {
+      console.error(e);
+      alert(e);
+    }
+  </script>
+</body>
+</html>

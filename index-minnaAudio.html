@@ -1,0 +1,416 @@
+<html>
+<head>
+<title>PlayAudioMinna</title>
+<script>
+const dataLinks = `
+1 - 1 - Kotoba.mp3
+1 - 2 - Bunkei.mp3
+1 - 3 - Reibun.mp3
+1 - 4 - Kaiwa.mp3
+1 - 5 - Renshuu C1.mp3
+1 - 6 - Renshuu C2.mp3
+1 - 7 - Renshuu C3.mp3
+1 - 8 - Mondai 1.mp3
+1 - 9 - Mondai 2.mp3
+1 - 10 - Mondai 3.mp3
+2 - 1 - Kotoba.mp3
+2 - 2 - Bunkei.mp3
+2 - 3 - Reibun.mp3
+2 - 5 - Kaiwa.mp3
+2 - 5 - Renshuu C1.mp3
+2 - 6 - Renshuu C2.mp3
+2 - 7 - Renshuu C3.mp3
+2 - 8 - Mondai 1.mp3
+2 - 9 - Mondai 2.mp3
+2 - 10 - Mondai 3.mp3
+3 - 1 - Kotoba.mp3
+3 - 2 - Bunkei.mp3
+3 - 3 - Reibun.mp3
+3 - 4 - Kaiwa.mp3
+3 - 5 - Renshuu C1.mp3
+3 - 6 - Renshuu C2.mp3
+3 - 7 - Renshuu C3.mp3
+3 - 8 - Mondai 1.mp3
+3 - 9 - Mondai 2.mp3
+4 - 1 - Kotoba.mp3
+4 - 2 - Bunkei.mp3
+4 - 3 - Reibun.mp3
+4 - 4 - Kaiwa.mp3
+4 - 5 - Renshuu C1.mp3
+4 - 6 - Renshuu C2.mp3
+4 - 7 - Renshuu C3.mp3
+4 - 8 - Mondai 1.mp3
+4 - 9 - Mondai 2.mp3
+4 - 10 - Mondai 3.mp3
+4 - 11 - Mondai 4.mp3
+5 - 1 - Kotoba.mp3
+5 - 2 - Bunkei.mp3
+5 - 3 - Reibun.mp3
+5 - 4 - Kaiwa.mp3
+5 - 5 - Renshuu C1.mp3
+5 - 6 - Renshuu C2.mp3
+5 - 7 - Renshuu C3.mp3
+5 - 8 - Mondai 1.mp3
+5 - 9 - Mondai 2.mp3
+5 - 10 - Mondai 3.mp3
+6 - 1 - Kotoba.mp3
+6 - 2 - Bunkei.mp3
+6 - 3 - Reibun.mp3
+6 - 4 - Kaiwa.mp3
+6 - 5 - Renshuu C1.mp3
+6 - 6 - Renshuu C2.mp3
+6 - 7 - Renshuu C3.mp3
+6 - 8 - Mondai 1.mp3
+6 - 9 - Mondai 2.mp3
+7 - 1 - Kotoba.mp3
+7 - 2 - Bunkei.mp3
+7 - 3 - Reibun.mp3
+7 - 4 - Kaiwa.mp3
+7 - 5 - Renshuu C1.mp3
+7 - 6 - Renshuu C2.mp3
+7 - 7 - Renshuu C3.mp3
+7 - 8 - Mondai 1.mp3
+7 - 9 - Mondai 2.mp3
+7 - 10 - Mondai 3.mp3
+8 - 1 - Kotoba.mp3
+8 - 2 - Bunkei.mp3
+8 - 3 - Reibun.mp3
+8 - 4 - Kaiwa.mp3
+8 - 5 - Renshuu C1.mp3
+8 - 6 - Renshuu C2.mp3
+8 - 7 - Renshuu C3.mp3
+8 - 8 - Mondai 1.mp3
+8 - 9 - Mondai 2.mp3
+8 - 10 - Mondai 3.mp3
+9 - 1 - Kotoba.mp3
+9 - 2 - Bunkei.mp3
+9 - 3 - Reibun.mp3
+9 - 4 - Kaiwa.mp3
+9 - 5 - Renshuu C1.mp3
+9 - 6 - Renshuu C2.mp3
+9 - 7 - Renshuu C3.mp3
+9 - 8 - Mondai 1.mp3
+9 - 9 - Mondai 2.mp3
+10 - 1 - Kotoba.mp3
+10 - 2 - Bunkei.mp3
+10 - 3 - Reibun.mp3
+10 - 4 - Kaiwa.mp3
+10 - 5 - Renshuu C1.mp3
+10 - 6 - Renshuu C2.mp3
+10 - 7 - Renshuu C3.mp3
+10 - 8 - Mondai 1.mp3
+10 - 9 - Mondai 2.mp3
+10 - 10 - Mondai 3.mp3
+11 - 1 - Kotoba.mp3
+11 - 2- Bunkei.mp3
+11 - 3 - Reibun.mp3
+11 - 4 - Kaiwa.mp3
+11 - 5 - Renshuu C1.mp3
+11 - 6 - Renshuu C2.mp3
+11 - 7 - Renshuu C3.mp3
+11 - 8 - Mondai 1.mp3
+11 - 9 - Mondai 2.mp3
+11 - 10 - Mondai 3.mp3
+12 - 1 - Kotoba.mp3
+12 - 2 - Bunkei.mp3
+12 - 3 - Reibun.mp3
+12 - 4 - Kaiwa.mp3
+12 - 5 - Renshuu C1.mp3
+12 - 6 - Renshuu C2.mp3
+12 - 7 - Renshuu C3.mp3
+12 - 8 - Mondai 1.mp3
+12 - 9 - Mondai 2.mp3
+13 - 1 - Kotoba.mp3
+13 - 2 - Bunkei.mp3
+13 - 3 - Reibun.mp3
+13 - 4 - Kaiwa.mp3
+13 - 5 - Renshuu C1.mp3
+13 - 6 - Renshuu C2.mp3
+13 - 7 - Renshuu C3.mp3
+13 - 8 - Mondai 1.mp3
+13 - 9 - Mondai 2.mp3
+14 - 1 - Kotoba.mp3
+14 - 2 - Bunkei.mp3
+14 - 3 - Reibun.mp3
+14 - 4 - Kaiwa.mp3
+14 - 5 - Renshuu C1.mp3
+14 - 6 - Renshuu C2.mp3
+14 - 7 - Renshuu C3.mp3
+14 - 8 - Mondai 1.mp3
+14 - 9 - Mondai 2.mp3
+14 - 10 - Mondai 3.mp3
+15 - 1 - Kotoba.mp3
+15 - 2 - Bunkei.mp3
+15 - 3 - Reibun.mp3
+15 - 4 - Kaiwa.mp3
+15 - 5 - Renshuu C1.mp3
+15 - 6 - Renshuu C2.mp3
+15 - 7 - Renshuu C3.mp3
+15 - 8 - Mondai 1.mp3
+15 - 9 - Mondai 2.mp3
+16 - 1 - Kotoba.mp3
+16 - 2 - Bunkei.mp3
+16 - 3 - Reibun.mp3
+16 - 4 - Kaiwa.mp3
+16 - 5 - Renshuu C1.mp3
+16 - 6 - Renshuu C2.mp3
+16 - 7 - Renshuu C3.mp3
+16 - 8 - Mondai 1.mp3
+16 - 9 - Mondai 2.mp3
+16 - 10 - Mondai 3.mp3
+17 - 1 - Kotoba.mp3
+17 - 2 - Bunkei.mp3
+17 - 3 - Reibun.mp3
+17 - 4 - Kaiwa.mp3
+17 - 5 - Renshuu C1.mp3
+17 - 6 - Renshuu C2.mp3
+17 - 7 - Renshuu C3.mp3
+17 - 8 - Mondai 1.mp3
+17 - 9 - Mondai 2.mp3
+18 - 1 - Kotoba.mp3
+18 - 2 - Bunkei.mp3
+18 - 3 - Reibun.mp3
+18 - 4 - Kaiwa.mp3
+18 - 5 - Renshuu C1.mp3
+18 - 6 - Renshuu C2.mp3
+18 - 7 - Renshuu C3.mp3
+18 - 8 - Mondai 1.mp3
+18 - 9 - Mondai 2.mp3
+19 - 1 - Kotoba.mp3
+19 - 2 - Bunkei.mp3
+19 - 3 - Reibun.mp3
+19 - 4 - Kaiwa.mp3
+19 - 5 - Renshuu C1.mp3
+19 - 6 - Renshuu C2.mp3
+19 - 7 - Renshuu C3.mp3
+19 - 8 - Mondai 1.mp3
+19 - 9 - Mondai 2.mp3
+20 - 1 - Kotoba.mp3
+20 - 2 - Bunkei.mp3
+20 - 3 - Reibun.mp3
+20 - 4 - Kaiwa.mp3
+20 - 5 - Renshuu C1.mp3
+20 - 6 - Renshuu C2.mp3
+20 - 7 - Renshuu C3.mp3
+20 - 8 - Mondai 1.mp3
+20 - 9 - Mondai 2.mp3
+21 - 1 - Kotoba.mp3
+21 - 2 - Bunkei.mp3
+21 - 3 - Reibun.mp3
+21 - 4 - Kaiwa.mp3
+21 - 5 - Renshuu C1.mp3
+21 - 6 - Renshuu C2.mp3
+21 - 7 - Renshuu C3.mp3
+21 - 8 - Mondai 1.mp3
+21 - 9 - Mondai 2.mp3
+22 - 1 - Kotoba.mp3
+22 - 2 - Bunkei.mp3
+22 - 3 - Reibun.mp3
+22 - 4 - Kaiwa.mp3
+22 - 5 - Renshuu C1.mp3
+22 - 6 - Renshuu C2.mp3
+22 - 7 - Renshuu C3.mp3
+22 - 8 - Mondai 1.mp3
+22 - 9 - Mondai 2.mp3
+23 - 1 - Kotoba.mp3
+23 - 2 - Bunkei.mp3
+23 - 3 - Reibun.mp3
+23 - 4 - Kaiwa.mp3
+23 - 5 - Renshuu C1.mp3
+23 - 6 - Renshuu C2.mp3
+23 - 7 - Renshuu C3.mp3
+23 - 8 - Mondai 1.mp3
+23 - 9 - Mondai 2.mp3
+23 - 10 - Mondai 3.mp3
+24 - 1 - Kotoba.mp3
+24 - 2 - Bunkei.mp3
+24 - 3 - Reibun.mp3
+24 - 5 - Kaiwa.mp3
+24 - 5 - Renshuu C1.mp3
+24 - 6 - Renshuu C2.mp3
+24 - 7 - Renshuu C3.mp3
+24 - 8 - Mondai 1.mp3
+24 - 9 - Mondai 2.mp3
+25 - 1 - Kotoba.mp3
+25 - 2 - Bunkei.mp3
+25 - 3 - Reibun.mp3
+25 - 5 - Kaiwa.mp3
+25 - 6 - Renshuu C1.mp3
+25 - 7 - Renshuu C2.mp3
+25 - 8 - Renshuu C3.mp3
+25 - 9 - Mondai 1.mp3
+25 - 10 - Mondai 2.mp3
+`;
+</script>
+<script src="dom.nts.js"></script>
+<script>
+var CURRENT_AUDIO = new Audio();
+CURRENT_AUDIO.setAttribute('controls', true);
+CURRENT_AUDIO.style.height = '30px';
+CURRENT_AUDIO.style.width = '100%';
+var AUDIO_CONFIG = {
+  loop: false,
+  setLoop(value) {
+    CURRENT_AUDIO && (CURRENT_AUDIO.loop = value);
+    this.loop = value;
+  },
+  playbackRate: 1,
+  setPlaybackRate(value) {
+    CURRENT_AUDIO && (CURRENT_AUDIO.playbackRate = value);
+    this.playbackRate = value;
+  }
+};
+</script>
+<script>
+function playAudio(url) {
+  //CURRENT_AUDIO = new Audio(url);
+  //Object.assign(CURRENT_AUDIO, AUDIO_CONFIG);
+  CURRENT_AUDIO.src = url;
+  CURRENT_AUDIO.play();
+  CURRENT_AUDIO.playbackRate = AUDIO_CONFIG.playbackRate;
+}
+function processAndPlayAudio(url, clickedElement) {
+  for (const child of document.querySelector('#elmId_audioList').children) {
+    child.style.backgroundColor = 'white';
+  }
+  clickedElement.style.backgroundColor = 'red';
+  playAudio(url);
+}
+function onchangeAudioSpeedInput(value) {
+  console.log(value);
+  AUDIO_CONFIG.setPlaybackRate(0.7 + 0.3*(value/100));
+}
+function onclickBtnResetAudioSpeed() {
+  document.querySelector('#elmId_ctrlAudioSpeed').value = 100;
+  AUDIO_CONFIG.setPlaybackRate(1);
+}
+function onclickLoadPdf() {
+  const defaultPdfUrl = './pdf/MinnaNoNihongoI_Honsatsu.pdf';
+  const customPdfUrl = document.querySelector('#elmId_inputPdfFileUrl').value;
+  const finalUrl = customPdfUrl ? customPdfUrl : defaultPdfUrl;
+
+  const windowHeight = window.innerHeight;
+  const controlPanelHeight = document.querySelector('#elmId_controlPanel').getBoundingClientRect().height;
+  const divButtonsLoadPdfHeight = document.querySelector('#elmId_divButtonsLoadPdf').getBoundingClientRect().height;
+
+  const pdfIframeWantedHeight = Math.round(windowHeight - (controlPanelHeight + divButtonsLoadPdfHeight)) - 20;
+  const innerHtml = `<embed src="${finalUrl}" width="1000" height="${pdfIframeWantedHeight}">`;
+  document.querySelector('#elmId_divPdfContainer').innerHTML
+    = innerHtml;
+}
+</script>
+<script>
+window.onload = () => {
+  document.querySelector('#elmId_audio').appendChild(CURRENT_AUDIO);
+
+  let sb = '';
+  for (const link of dataLinks.split('\n').filter(it=>it.length)) {
+    sb += `<div onclick="processAndPlayAudio('minna_audio/${link}', this)">${link}</div>`;
+  }
+  document.querySelector('#elmId_audioList').innerHTML = sb;
+
+  const checkboxId = 'elmId_checkbox_IsPlayAudioLoop';
+  const checkboxElement = createCheckBoxElement(checkboxId, isChecked => {
+    AUDIO_CONFIG.setLoop(isChecked);
+  }, AUDIO_CONFIG.loop);
+  const labelElement = createLabelElement(checkboxId, 'Loop audio?');
+  appendChildToById('#elmId_checkbox_IsPlayAudioLoop_Container', checkboxElement, labelElement);
+
+  document.querySelector('#elmId_inputPdfFileUpload').onchange = (event) => {
+    const file = event.target.files[0];
+    const url = URL.createObjectURL(file);
+    document.querySelector('#elmId_inputPdfFileUrl').value = url;
+  };
+
+  document.onkeydown = keyboardEvent => {
+    console.log(keyboardEvent);
+    const isUseKeyboardForControllingAudio = document.querySelector('#elmId_checkboxUseArrowKeyForAudio').checked;
+    if (!isUseKeyboardForControllingAudio) {
+      return;
+    }
+    switch(keyboardEvent.keyCode) {
+      case 37: {
+        controlPlayAudio({command: 'backward'});
+      } break;
+      case 39: {
+        controlPlayAudio({command: 'forward'});
+      } break;
+      case 32: {
+        keyboardEvent.preventDefault();
+        controlPlayAudio({command: 'playOrPause'});
+      }
+    }
+  };
+};
+function controlPlayAudio(commandOption) {
+  const sec = parseInt(document.querySelector('#elmId_inputAudioChangeSec').value);
+  if (!sec || sec < 0) {
+    return;
+  }
+  switch(commandOption.command) {
+    case 'backward': {
+      CURRENT_AUDIO.currentTime -= sec;
+    } break;
+    case 'forward': {
+      CURRENT_AUDIO.currentTime += sec;
+    } break;
+    case 'playOrPause': {
+      if (CURRENT_AUDIO.paused) {
+        CURRENT_AUDIO.play();
+      } else {
+        CURRENT_AUDIO.pause();
+      }
+    }
+  }
+}
+</script>
+</head>
+<body>
+<div id="elmId_root" style="height: 95vh;">
+
+<div id="elmId_controlPanel">
+  <div id="elmId_admin">
+    <button onclick="(function(){
+      const divInputContainer = document.querySelector('#elmId_divInputContainer');
+      divInputContainer.style.display = (divInputContainer.style.display !== 'none') ? 'none' : 'block';
+    })();return false;">Show/Hide panel</button>
+  </div>
+  <div id="elmId_divInputContainer">
+    <hr>
+    <div>
+      <div id="elmId_checkbox_IsPlayAudioLoop_Container" style="display: inline"></div>
+    </div>
+    <div>
+      <label for="elmId_ctrlAudioSpeed">Speed</label>
+      <input id="elmId_ctrlAudioSpeed" type="range" value="100" onchange="onchangeAudioSpeedInput(this.value)">
+      <button onclick="onclickBtnResetAudioSpeed()">Reset speed</button>
+    </div>
+    <div>
+      <label for="elmId_checkboxUseArrowKeyForAudio">UseKeyboards</label>
+      <input id="elmId_checkboxUseArrowKeyForAudio" type="checkbox">
+    </div>
+    <div>
+      <button onclick="controlPlayAudio({command: 'backward'});">&lt&lt</button>
+      <button onclick="controlPlayAudio({command: 'forward'});">&gt&gt</button>
+      <input id="elmId_inputAudioChangeSec" type="number" style="width: 40px;" value="3">
+      <label for="elmId_inputAudioChangeSec">Secs</label>
+    </div>
+    <hr>
+  </div>
+  <div id="elmId_audio" style="width: 90vw;"></div>
+</div>
+
+<div id="elmId_divAudioAndPdf">
+  <div id="elmId_audioList" style="height: calc(95vh - 180px); width: 200px; overflow-y: scroll; display: inline-block"></div>
+  <div id="elmId_divPdfContainer" style="display: inline-block"></div>
+</div>
+<div id="elmId_divButtonsLoadPdf">
+  <button id="elmId_btnShowPdf" onclick="onclickLoadPdf();">Load PDF</button>
+  <input id="elmId_inputPdfFileUrl" type="text">
+  <input id="elmId_inputPdfFileUpload" type="file">
+</div>
+
+</div>
+
+</body>
+</html>
