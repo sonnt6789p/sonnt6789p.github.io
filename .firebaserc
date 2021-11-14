@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "enja-e93e7"
+  },
+  "targets": {
+    "enja-e93e7": {
+      "hosting": {
+        "enja9p": [
+          "enja9p"
+        ]
+      }
+    }
+  }
+}

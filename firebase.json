@@ -1,0 +1,11 @@
+{
+  "hosting": {
+    "public": "public",
+    "target": "enja9p",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}
