@@ -112,14 +112,10 @@ async function fetchEnJaJson() {
   }
 }
 function playAudioElmFromUrl(audioUrl, customSpeed) {
-  try {
-    const audioElm = document.querySelector('audio');
-    audioElm.src = audioUrl;
-    audioElm.playbackRate = customSpeed || GLOB.AUDIO_PLAYBACK_RATE;
-    return audioElm.play();
-  } catch (e) {
-    console.error(e);
-  }
+  const audioElm = document.querySelector('audio');
+  audioElm.src = audioUrl;
+  audioElm.playbackRate = customSpeed || GLOB.AUDIO_PLAYBACK_RATE;
+  return audioElm.play();
 }
 function sleep(timeMs) {
   return new Promise((resolve, reject) => {
@@ -141,9 +137,13 @@ async function waitForAudioFinish() {
   }
 }
 async function playAudioElmFromUrlToEnd(audioUrl, customSpeed) {
-  await playAudioElmFromUrl(audioUrl, customSpeed);
-  await waitForPauseFlag();
-  await waitForAudioFinish();
+  try {
+    await playAudioElmFromUrl(audioUrl, customSpeed);
+    await waitForPauseFlag();
+    await waitForAudioFinish();
+  } catch (e) {
+    console.error(e);
+  }
   throwIfWanted();
 }
 async function waitForPauseFlag() {
