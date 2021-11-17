@@ -11957,8 +11957,8 @@
   },
   {
     "lessonId": "20.0",
-    "englishRawText": "Yeah, about when?\nHow about approximately the beginning of August?\nGood!\nWell, I'll check various things, and call you again.\nThanks, I'm waiting for you.",
-    "japaneseRawText": "うん。 いつ ごろ？\n8月の初め ごろ は どう？\nいいね。\nじゃ、いろいろ 調べて、また 電話するよ。\nありがとう。 あなたを 待ってるよ。",
+    "englishRawText": "Yeah, about when?\nHow about approximately the beginning of August?",
+    "japaneseRawText": "うん。 いつ ごろ？\n8月の初め ごろ は どう？",
     "englishAudioFileName": "audio/FEMALE/EN_US/Yeah`_about_when~{xn}How_about_approximately_the_beginning_of_August~{xn}Good!{xn}Well`_I'll_check_various_things`_and_call_you_again^{xn}Thanks`_I'm_waiting_for_you^.mp3",
     "japaneseAudioFileName": "audio/FEMALE/JA_JP/うん。いつごろ？{xn}8月の初めごろはどう？{xn}いいね。{xn}じゃ、いろいろ調べて、また電話するよ。{xn}ありがとう。あなたを待ってるよ。.ogg",
     "englishSentences": [
@@ -11969,7 +11969,26 @@
       {
         "rawText": "How about approximately the beginning of August?",
         "audioFileName": "audio/FEMALE/EN_US/How_about_approximately_the_beginning_of_August~.mp3"
+      }
+    ],
+    "japaneseSentences": [
+      {
+        "rawText": "うん。いつごろ？",
+        "audioFileName": "audio/FEMALE/JA_JP/うん。いつごろ？.ogg"
       },
+      {
+        "rawText": "8月の初めごろはどう？",
+        "audioFileName": "audio/FEMALE/JA_JP/8月の初めごろはどう？.ogg"
+      }
+    ]
+  },
+  {
+    "lessonId": "20.0",
+    "englishRawText": "Good!\nWell, I'll check various things, and call you again.\nThanks, I'm waiting for you.",
+    "japaneseRawText": "いいね。\nじゃ、いろいろ 調べて、また 電話するよ。\nありがとう。 あなたを 待ってるよ。",
+    "englishAudioFileName": "audio/FEMALE/EN_US/Yeah`_about_when~{xn}How_about_approximately_the_beginning_of_August~{xn}Good!{xn}Well`_I'll_check_various_things`_and_call_you_again^{xn}Thanks`_I'm_waiting_for_you^.mp3",
+    "japaneseAudioFileName": "audio/FEMALE/JA_JP/うん。いつごろ？{xn}8月の初めごろはどう？{xn}いいね。{xn}じゃ、いろいろ調べて、また電話するよ。{xn}ありがとう。あなたを待ってるよ。.ogg",
+    "englishSentences": [
       {
         "rawText": "Good!",
         "audioFileName": "audio/FEMALE/EN_US/Good!.mp3"
@@ -11984,14 +12003,6 @@
       }
     ],
     "japaneseSentences": [
-      {
-        "rawText": "うん。いつごろ？",
-        "audioFileName": "audio/FEMALE/JA_JP/うん。いつごろ？.ogg"
-      },
-      {
-        "rawText": "8月の初めごろはどう？",
-        "audioFileName": "audio/FEMALE/JA_JP/8月の初めごろはどう？.ogg"
-      },
       {
         "rawText": "いいね。",
         "audioFileName": "audio/FEMALE/JA_JP/いいね。.ogg"

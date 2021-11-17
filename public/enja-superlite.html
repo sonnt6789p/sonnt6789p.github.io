@@ -27,6 +27,7 @@ window.GLOB = {
   IS_PAUSING: false,
   IS_INTENTIONAL_ERROR: false,
 };
+window.GLOB_ORIGINAL = Object.assign({}, window.GLOB);
   </script>
 
   <script>
@@ -139,11 +140,11 @@ async function waitForAudioFinish() {
 async function playAudioElmFromUrlToEnd(audioUrl, customSpeed) {
   try {
     await playAudioElmFromUrl(audioUrl, customSpeed);
-    await waitForPauseFlag();
-    await waitForAudioFinish();
   } catch (e) {
     console.error(e);
   }
+  await waitForPauseFlag();
+  await waitForAudioFinish();
   throwIfWanted();
 }
 async function waitForPauseFlag() {
@@ -218,18 +219,43 @@ async function sendToServerTry(text) {
 window.cmd = {
   get pause() {
     GLOB.IS_PAUSING = true;
+    setAudioPlayingStatus(false);
   },
   get unpause() {
     GLOB.IS_PAUSING = false;
+    setAudioPlayingStatus(true);
   },
   get next() {
+    setAudioPlayingStatus(false);
     interuptCurrentLoop();
     globIndexCurrentInc();
+    setAudioPlayingStatus(true);
     return GLOB.INDEX_CURRENT + ' : ' + GLOB.ENJA[GLOB.INDEX_CURRENT].japaneseRawText;
   },
   get prev() {
+    setAudioPlayingStatus(false);
     interuptCurrentLoop();
     globIndexCurrentDec();
+    setAudioPlayingStatus(true);
+    return GLOB.INDEX_CURRENT + ' : ' + GLOB.ENJA[GLOB.INDEX_CURRENT].japaneseRawText;
+  },
+  get replayOne() {
+    interuptCurrentLoop();
+    return GLOB.INDEX_CURRENT + ' : ' + GLOB.ENJA[GLOB.INDEX_CURRENT].japaneseRawText;
+  },
+  get replayCurrentForeverOn() {
+    GLOB.REPLAY_EN = 0;
+    GLOB.REPLAY_JA_BEFORE = 99999;
+    GLOB.REPLAY_JA_AFTER = 99999;
+    interuptCurrentLoop();
+    return GLOB.INDEX_CURRENT + ' : ' + GLOB.ENJA[GLOB.INDEX_CURRENT].japaneseRawText;
+  },
+  get replayCurrentForeverOff() {
+    GLOB.REPLAY_EN = GLOB_ORIGINAL.REPLAY_EN;
+    GLOB.REPLAY_JA_BEFORE = GLOB_ORIGINAL.REPLAY_JA_BEFORE;
+    GLOB.REPLAY_JA_AFTER = GLOB_ORIGINAL.REPLAY_JA_AFTER;
+    interuptCurrentLoop();
+    globIndexCurrentInc();
     return GLOB.INDEX_CURRENT + ' : ' + GLOB.ENJA[GLOB.INDEX_CURRENT].japaneseRawText;
   },
   goto(index, relative) {
@@ -289,7 +315,10 @@ window.cmd = {
   get alertBookmark() {
     const bm = localStorage.getItem('bookmark');
     alert(bm);
-  }
+  },
+  get mergeWindow() {
+    Object.assign(window, window.cmd);
+  },
 };
 window.CMD = window.cmd;
   </script>
